@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     mongodb_url: str = "mongodb://localhost:27017"
     mongodb_db_name: str = "spotify_dashboard"
     frontend_url: str = "http://localhost:5173"
+    allowed_origins: str = ""
 
     model_config = {"env_file": ".env"}
 

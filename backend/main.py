@@ -6,9 +6,13 @@ from routers import auth, tracks, artists, profile
 
 app = FastAPI(title="Spotify Dashboard API")
 
+origins = [settings.frontend_url]
+if settings.allowed_origins:
+    origins.extend(o.strip() for o in settings.allowed_origins.split(",") if o.strip())
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
