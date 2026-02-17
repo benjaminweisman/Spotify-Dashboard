@@ -22,7 +22,7 @@ export function TopArtistsList({ artists, loading }: Props) {
           >
             <div className="artist-image-wrapper">
               <img
-                src={artist.images[artist.images.length - 1]?.url}
+                src={artist.images?.[artist.images.length - 1]?.url ?? ''}
                 alt={artist.name}
                 className="artist-image"
               />
@@ -30,7 +30,7 @@ export function TopArtistsList({ artists, loading }: Props) {
             </div>
             <span className="artist-name">{artist.name}</span>
             <span className="artist-genre">
-              {artist.genres.slice(0, 2).join(', ')}
+              {(artist.genres ?? []).slice(0, 2).join(', ')}
             </span>
           </a>
         ))}

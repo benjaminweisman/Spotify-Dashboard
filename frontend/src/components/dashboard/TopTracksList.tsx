@@ -28,7 +28,7 @@ export function TopTracksList({ tracks, loading }: Props) {
           >
             <span className="track-rank">{i + 1}</span>
             <img
-              src={track.album.images[track.album.images.length - 1]?.url}
+              src={track.album?.images?.[track.album.images.length - 1]?.url ?? ''}
               alt={track.album.name}
               className="track-album-art"
             />
