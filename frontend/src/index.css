@@ -166,6 +166,53 @@ a {
   line-height: 1.6;
 }
 
+/* Login disclaimer */
+.login-disclaimer {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Listening Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem 0.5rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--spotify-green);
+}
+
+.stat-value-text {
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Charts */
+.genre-bar-chart,
+.popularity-chart {
+  width: 100%;
+  min-height: 300px;
+}
+
 /* Header */
 .header {
   display: flex;
@@ -389,5 +436,9 @@ a {
     flex-direction: column;
     gap: 0.75rem;
     align-items: flex-start;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

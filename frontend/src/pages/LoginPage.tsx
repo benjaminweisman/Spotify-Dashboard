@@ -15,6 +15,7 @@ export function LoginPage() {
         <button onClick={login} className="btn btn-spotify">
           Login with Spotify
         </button>
+        <p className="login-disclaimer">First load may take a moment to wake up the server</p>
       </div>
     </div>
   );

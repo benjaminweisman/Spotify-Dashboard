@@ -9,6 +9,9 @@ import { TopTracksList } from '../components/dashboard/TopTracksList';
 import { TopArtistsList } from '../components/dashboard/TopArtistsList';
 import { AudioFeaturesRadar } from '../components/dashboard/AudioFeaturesRadar';
 import { TasteComparison } from '../components/dashboard/TasteComparison';
+import { ListeningStats } from '../components/dashboard/ListeningStats';
+import { GenreBreakdown } from '../components/dashboard/GenreBreakdown';
+import { PopularityDistribution } from '../components/dashboard/PopularityDistribution';
 import { ErrorBanner } from '../components/common/ErrorBanner';
 
 export function DashboardPage() {
@@ -30,6 +33,12 @@ export function DashboardPage() {
 
         {error && <ErrorBanner message={error} />}
 
+        <ListeningStats
+          tracks={tracks}
+          artists={artists}
+          loading={tracksLoading || artistsLoading}
+        />
+
         <div className="dashboard-grid">
           <div className="dashboard-col">
             <TopTracksList tracks={tracks} loading={tracksLoading} />
@@ -42,6 +51,15 @@ export function DashboardPage() {
                 available={audioFeatures.available}
               />
             )}
+          </div>
+        </div>
+
+        <div className="dashboard-grid">
+          <div className="dashboard-col">
+            <GenreBreakdown artists={artists} loading={artistsLoading} />
+          </div>
+          <div className="dashboard-col">
+            <PopularityDistribution tracks={tracks} loading={tracksLoading} />
           </div>
         </div>
 
