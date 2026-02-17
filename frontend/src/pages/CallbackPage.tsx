@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { exchangeToken } from '../api/spotify';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export function CallbackPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,12 +27,12 @@ export function CallbackPage() {
         if (data.refresh_token) {
           localStorage.setItem('refresh_token', data.refresh_token);
         }
-        navigate('/dashboard', { replace: true });
+        window.location.replace('/dashboard');
       })
       .catch(() => {
         setError('Failed to exchange authorization code');
       });
-  }, [searchParams, navigate]);
+  }, [searchParams]);
 
   if (error) {
     return (
@@ -41,7 +40,7 @@ export function CallbackPage() {
         <div className="login-card">
           <h2>Authentication Error</h2>
           <p>{error}</p>
-          <button onClick={() => navigate('/')} className="btn btn-primary">
+          <button onClick={() => window.location.replace('/')} className="btn btn-primary">
             Try Again
           </button>
         </div>
