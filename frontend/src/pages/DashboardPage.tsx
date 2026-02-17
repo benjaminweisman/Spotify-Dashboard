@@ -27,12 +27,12 @@ export function DashboardPage() {
 
   // Debug: check what fields Spotify actually returns
   if (!tracksLoading && tracks.length > 0) {
-    console.log('Sample track keys:', Object.keys(tracks[0]));
-    console.log('Sample track:', JSON.stringify(tracks[0], null, 2));
+    const t = tracks[0];
+    console.log('DEBUG TRACK:', 'popularity=' + t.popularity, 'keys=' + Object.keys(t).join(','));
   }
   if (!artistsLoading && artists.length > 0) {
-    console.log('Sample artist keys:', Object.keys(artists[0]));
-    console.log('Sample artist:', JSON.stringify(artists[0], null, 2));
+    const a = artists[0];
+    console.log('DEBUG ARTIST:', 'genres=' + JSON.stringify(a.genres), 'popularity=' + a.popularity, 'keys=' + Object.keys(a).join(','));
   }
 
   return (
