@@ -13,7 +13,7 @@ export function PopularityDistribution({ tracks, loading }: Props) {
   const data = useMemo(() => {
     const counts = [0, 0, 0, 0, 0];
     for (const track of tracks) {
-      const p = track.popularity;
+      const p = track.popularity ?? 0;
       if (p < 20) counts[0]++;
       else if (p < 40) counts[1]++;
       else if (p < 60) counts[2]++;

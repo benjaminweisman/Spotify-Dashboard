@@ -9,12 +9,14 @@ interface Props {
 
 export function ListeningStats({ tracks, artists, loading }: Props) {
   const stats = useMemo(() => {
-    const uniqueArtists = new Set(tracks.flatMap((t) => t.artists.map((a) => a.id)));
+    const uniqueArtists = new Set(tracks.flatMap((t) => (t.artists ?? []).map((a) => a.id)));
     const allGenres = artists.flatMap((a) => a.genres ?? []);
     const uniqueGenres = new Set(allGenres);
+
+    const popularities = tracks.map((t) => t.popularity ?? 0);
     const avgPopularity =
-      tracks.length > 0
-        ? Math.round(tracks.reduce((sum, t) => sum + t.popularity, 0) / tracks.length)
+      popularities.length > 0
+        ? Math.round(popularities.reduce((sum, p) => sum + p, 0) / popularities.length)
         : 0;
 
     const genreCounts: Record<string, number> = {};
