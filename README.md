@@ -83,8 +83,11 @@ frontend/
   src/
     api/               # Axios client + API call modules
     context/           # Auth context (login/logout/profile state)
-    hooks/             # Data-fetching hooks (useTopTracks, useTopArtists, useAudioFeatures)
+    hooks/             # Data-fetching hooks (useTopTracks, useTopArtists)
     pages/             # Login, Callback, Dashboard pages
-    components/        # UI components (radar chart, track/artist lists, etc.)
+    components/
+      common/          # Shared UI (error banner, loading spinner, route guard)
+      dashboard/       # Dashboard widgets (stats, charts, track/artist lists)
+      layout/          # Header
     types/             # TypeScript interfaces
 ```
