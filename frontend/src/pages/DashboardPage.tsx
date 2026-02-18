@@ -25,18 +25,11 @@ export function DashboardPage() {
 
   const error = tracksError || artistsError;
 
-  const debugInfo = !tracksLoading && !artistsLoading && tracks.length > 0
-    ? `pop=${tracks[0].popularity} | genres=${JSON.stringify(artists[0]?.genres)} | track_keys=${Object.keys(tracks[0]).join(',')}`
-    : 'loading...';
-
   return (
     <div className="dashboard">
       <Header />
       <main className="dashboard-content">
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
-        <pre style={{ background: '#1a1a2e', padding: 8, borderRadius: 6, fontSize: 11, color: '#0f0', marginBottom: 12, overflowX: 'auto' }}>
-          {debugInfo}
-        </pre>
 
         {error && <ErrorBanner message={error} />}
 
