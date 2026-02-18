@@ -1,28 +1,50 @@
 import { useState, useEffect } from 'react';
-import { fetchTopArtists, fetchArtistDetails } from '../api/spotify';
+import { fetchTopArtists } from '../api/spotify';
 import type { SpotifyArtist, TimeRange } from '../types/spotify';
 
-async function enrichArtists(items: SpotifyArtist[]): Promise<SpotifyArtist[]> {
-  if (items.length === 0) return items;
+const CACHE_KEY = 'spotify_artist_details';
+
+interface ArtistCache {
+  genres: string[];
+  popularity: number;
+}
+
+function getArtistCache(): Record<string, ArtistCache> {
   try {
-    const ids = items.map((a) => a.id);
-    const details = await fetchArtistDetails(ids);
-    const detailMap = new Map(
-      details.artists.filter(Boolean).map((a) => [a.id, a])
-    );
-    return items.map((a) => {
-      const full = detailMap.get(a.id);
-      if (!full) return a;
-      return {
-        ...a,
-        genres: full.genres ?? a.genres,
-        popularity: full.popularity ?? a.popularity,
-        images: a.images ?? full.images,
-      };
-    });
+    return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
   } catch {
-    return items;
+    return {};
   }
+}
+
+function updateArtistCache(artists: SpotifyArtist[]) {
+  const cache = getArtistCache();
+  let changed = false;
+  for (const a of artists) {
+    if (a.genres != null || a.popularity != null) {
+      cache[a.id] = {
+        genres: a.genres ?? cache[a.id]?.genres ?? [],
+        popularity: a.popularity ?? cache[a.id]?.popularity ?? 0,
+      };
+      changed = true;
+    }
+  }
+  if (changed) {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+  }
+}
+
+function applyArtistCache(artists: SpotifyArtist[]): SpotifyArtist[] {
+  const cache = getArtistCache();
+  return artists.map((a) => {
+    const cached = cache[a.id];
+    if (!cached) return a;
+    return {
+      ...a,
+      genres: a.genres ?? cached.genres,
+      popularity: a.popularity ?? cached.popularity,
+    };
+  });
 }
 
 export function useTopArtists(timeRange: TimeRange) {
@@ -34,9 +56,10 @@ export function useTopArtists(timeRange: TimeRange) {
     setLoading(true);
     setError(null);
     fetchTopArtists(timeRange)
-      .then(async (data) => {
-        const items = await enrichArtists(data.items);
-        setArtists(items);
+      .then((data) => {
+        const items = data.items;
+        updateArtistCache(items);
+        setArtists(applyArtistCache(items));
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));

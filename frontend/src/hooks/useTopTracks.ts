@@ -1,23 +1,39 @@
 import { useState, useEffect } from 'react';
-import { fetchTopTracks, fetchTrackDetails } from '../api/spotify';
+import { fetchTopTracks } from '../api/spotify';
 import type { SpotifyTrack, TimeRange } from '../types/spotify';
 
-async function enrichTracks(items: SpotifyTrack[]): Promise<SpotifyTrack[]> {
-  if (items.length === 0) return items;
+const CACHE_KEY = 'spotify_track_popularity';
+
+function getPopularityCache(): Record<string, number> {
   try {
-    const ids = items.map((t) => t.id);
-    const details = await fetchTrackDetails(ids);
-    const detailMap = new Map(
-      details.tracks.filter(Boolean).map((t) => [t.id, t])
-    );
-    return items.map((t) => {
-      const full = detailMap.get(t.id);
-      if (!full) return t;
-      return { ...t, popularity: full.popularity ?? t.popularity };
-    });
+    return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
   } catch {
-    return items;
+    return {};
   }
+}
+
+function updatePopularityCache(tracks: SpotifyTrack[]) {
+  const cache = getPopularityCache();
+  let changed = false;
+  for (const t of tracks) {
+    if (t.popularity != null) {
+      cache[t.id] = t.popularity;
+      changed = true;
+    }
+  }
+  if (changed) {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+  }
+}
+
+function applyPopularityCache(tracks: SpotifyTrack[]): SpotifyTrack[] {
+  const cache = getPopularityCache();
+  return tracks.map((t) => {
+    if (t.popularity != null) return t;
+    const cached = cache[t.id];
+    if (cached != null) return { ...t, popularity: cached };
+    return t;
+  });
 }
 
 export function useTopTracks(timeRange: TimeRange) {
@@ -29,9 +45,12 @@ export function useTopTracks(timeRange: TimeRange) {
     setLoading(true);
     setError(null);
     fetchTopTracks(timeRange)
-      .then(async (data) => {
-        const items = await enrichTracks(data.items);
-        setTracks(items);
+      .then((data) => {
+        const items = data.items;
+        // Cache any popularity values Spotify returns
+        updatePopularityCache(items);
+        // Fill in missing values from cache
+        setTracks(applyPopularityCache(items));
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
