@@ -2,16 +2,28 @@
 
 A personal Spotify analytics dashboard that visualizes your listening profile, top tracks/artists, audio fingerprint, and taste evolution over time.
 
+## Screenshots
+
+![Login Page](screenshots/login.png)
+
+![Dashboard — Stats, Top Tracks & Artists](screenshots/dashboard.png)
+
+![Genre Breakdown & Popularity Distribution](screenshots/charts.png)
+
 ## Architecture
 
 - **Frontend**: React + TypeScript + Vite, Recharts for data visualization
 - **Backend**: Python FastAPI, httpx for Spotify API calls
 - **Database**: MongoDB (motor async driver) for listening history snapshots
 - **Auth**: Spotify OAuth 2.0 (authorization code flow, server-side token exchange)
+- **Deployment**: Netlify (frontend) + Render (backend)
 
 ## Features
 
+- **Listening Stats** — Unique artists, genres, average popularity, and top genre at a glance
 - **Top Tracks & Artists** — View your most listened-to tracks and artists across three time ranges (4 weeks, 6 months, all time)
+- **Genre Breakdown** — Horizontal bar chart of your top 10 genres
+- **Popularity Distribution** — Histogram showing how mainstream (or niche) your taste is
 - **Audio Fingerprint** — Radar chart showing your average danceability, energy, valence, acousticness, and more
 - **Taste Comparison** — Overlay two time ranges to see how your listening habits have shifted
 - **Graceful Degradation** — Audio features endpoint may be restricted for new Spotify dev apps; the dashboard handles this with a clear fallback UI
