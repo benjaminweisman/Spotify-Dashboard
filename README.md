@@ -1,6 +1,6 @@
 # Spotify Dashboard
 
-A personal Spotify analytics dashboard that visualizes your listening profile, top tracks/artists, audio fingerprint, and taste evolution over time.
+A personal Spotify analytics dashboard that showcases your top tracks and artists, genre and popularity breakdowns, and listening stats — all filterable by time period.
 
 ## Screenshots
 
@@ -24,9 +24,6 @@ A personal Spotify analytics dashboard that visualizes your listening profile, t
 - **Top Tracks & Artists** — View your most listened-to tracks and artists across three time ranges (4 weeks, 6 months, all time)
 - **Genre Breakdown** — Horizontal bar chart of your top 10 genres
 - **Popularity Distribution** — Histogram showing how mainstream (or niche) your taste is
-- **Audio Fingerprint** — Radar chart showing your average danceability, energy, valence, acousticness, and more
-- **Taste Comparison** — Overlay two time ranges to see how your listening habits have shifted
-- **Graceful Degradation** — Audio features endpoint may be restricted for new Spotify dev apps; the dashboard handles this with a clear fallback UI
 
 ## Live Demo
 
