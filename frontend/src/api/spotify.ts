@@ -33,6 +33,24 @@ export async function fetchTopArtists(
   return data;
 }
 
+export async function fetchTrackDetails(
+  trackIds: string[]
+): Promise<{ tracks: SpotifyTrack[] }> {
+  const { data } = await api.get('/tracks/details', {
+    params: { ids: trackIds.join(',') },
+  });
+  return data;
+}
+
+export async function fetchArtistDetails(
+  artistIds: string[]
+): Promise<{ artists: SpotifyArtist[] }> {
+  const { data } = await api.get('/artists/details', {
+    params: { ids: artistIds.join(',') },
+  });
+  return data;
+}
+
 export async function fetchAudioFeatures(
   trackIds: string[]
 ): Promise<AudioFeaturesResponse> {

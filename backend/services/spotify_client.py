@@ -145,6 +145,20 @@ async def _get_several_artists(
     return [a for a in results if a is not None]
 
 
+async def get_tracks_by_ids(access_token: str, track_ids: list[str]) -> dict:
+    """Fetch full track objects by IDs."""
+    async with httpx.AsyncClient() as client:
+        tracks = await _get_several_tracks(client, access_token, track_ids)
+        return {"tracks": tracks}
+
+
+async def get_artists_by_ids(access_token: str, artist_ids: list[str]) -> dict:
+    """Fetch full artist objects by IDs."""
+    async with httpx.AsyncClient() as client:
+        artists = await _get_several_artists(client, access_token, artist_ids)
+        return {"artists": artists}
+
+
 async def get_audio_features(access_token: str, track_ids: list[str]) -> dict | None:
     """Fetch audio features for tracks. Returns None if 403 (restricted endpoint)."""
     async with httpx.AsyncClient() as client:

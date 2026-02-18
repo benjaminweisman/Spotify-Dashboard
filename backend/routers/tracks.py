@@ -3,7 +3,7 @@ from httpx import HTTPStatusError
 
 from middleware.auth_middleware import require_token
 from models.schemas import AudioFeature, AudioFeaturesResponse
-from services.spotify_client import get_top_tracks, get_audio_features
+from services.spotify_client import get_top_tracks, get_audio_features, get_tracks_by_ids
 
 router = APIRouter()
 
@@ -23,6 +23,20 @@ async def top_tracks(
         return await get_top_tracks(access_token, time_range, limit)
     except HTTPStatusError as e:
         raise HTTPException(status_code=e.response.status_code, detail="Failed to fetch top tracks")
+
+
+@router.get("/details")
+async def track_details(
+    ids: str = Query(..., description="Comma-separated track IDs"),
+    access_token: str = Depends(require_token),
+):
+    track_ids = [tid.strip() for tid in ids.split(",") if tid.strip()]
+    if not track_ids:
+        raise HTTPException(status_code=400, detail="No track IDs provided")
+    try:
+        return await get_tracks_by_ids(access_token, track_ids)
+    except HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail="Failed to fetch track details")
 
 
 @router.get("/audio-features", response_model=AudioFeaturesResponse)
