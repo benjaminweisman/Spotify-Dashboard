@@ -25,21 +25,19 @@ export function DashboardPage() {
 
   const error = tracksError || artistsError;
 
-  // Debug: check what fields Spotify actually returns
-  if (!tracksLoading && tracks.length > 0) {
-    const t = tracks[0];
-    console.log('DEBUG TRACK:', 'popularity=' + t.popularity, 'keys=' + Object.keys(t).join(','));
-  }
-  if (!artistsLoading && artists.length > 0) {
-    const a = artists[0];
-    console.log('DEBUG ARTIST:', 'genres=' + JSON.stringify(a.genres), 'popularity=' + a.popularity, 'keys=' + Object.keys(a).join(','));
-  }
+  // Debug: render data shape directly on page
+  const debugInfo = !tracksLoading && !artistsLoading && tracks.length > 0 && artists.length > 0
+    ? `Track keys: ${Object.keys(tracks[0]).join(', ')} | popularity=${tracks[0].popularity} | Artist genres=${JSON.stringify(artists[0].genres)}`
+    : 'Loading...';
 
   return (
     <div className="dashboard">
       <Header />
       <main className="dashboard-content">
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
+        <div style={{ background: '#1a1a2e', padding: '8px 12px', borderRadius: 6, fontSize: 12, color: '#0f0', marginBottom: 12, overflowX: 'auto', whiteSpace: 'nowrap' }}>
+          DEBUG: {debugInfo}
+        </div>
 
         {error && <ErrorBanner message={error} />}
 
