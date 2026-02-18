@@ -39,10 +39,7 @@ export function useTopTracks(timeRange: TimeRange) {
     setError(null);
     fetchTopTracks(timeRange)
       .then(async (data) => {
-        let items = data.items;
-        if (items.length > 0 && items[0].popularity == null) {
-          items = await enrichTracks(items);
-        }
+        const items = await enrichTracks(data.items);
         setTracks(items);
       })
       .catch((err) => setError(err.message))

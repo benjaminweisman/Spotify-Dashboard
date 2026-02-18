@@ -41,10 +41,7 @@ export function useTopArtists(timeRange: TimeRange) {
     setError(null);
     fetchTopArtists(timeRange)
       .then(async (data) => {
-        let items = data.items;
-        if (items.length > 0 && items[0].genres == null) {
-          items = await enrichArtists(items);
-        }
+        const items = await enrichArtists(data.items);
         setArtists(items);
       })
       .catch((err) => setError(err.message))
