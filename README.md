@@ -28,6 +28,10 @@ A personal Spotify analytics dashboard that visualizes your listening profile, t
 - **Taste Comparison** — Overlay two time ranges to see how your listening habits have shifted
 - **Graceful Degradation** — Audio features endpoint may be restricted for new Spotify dev apps; the dashboard handles this with a clear fallback UI
 
+## Live Demo
+
+> **Note:** This app uses Spotify's API in development mode, which limits access to pre-approved accounts only. If you'd like to try it with your own Spotify account, reach out and I can add you. Otherwise, check out the screenshots above for a full walkthrough.
+
 ## Setup
 
 ### Prerequisites
