@@ -25,19 +25,11 @@ export function DashboardPage() {
 
   const error = tracksError || artistsError;
 
-  // Debug: render data shape directly on page
-  const debugInfo = !tracksLoading && !artistsLoading && tracks.length > 0 && artists.length > 0
-    ? `Track keys: ${Object.keys(tracks[0]).join(', ')} | popularity=${tracks[0].popularity} | Artist genres=${JSON.stringify(artists[0].genres)}`
-    : 'Loading...';
-
   return (
     <div className="dashboard">
       <Header />
       <main className="dashboard-content">
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
-        <div style={{ background: '#1a1a2e', padding: '8px 12px', borderRadius: 6, fontSize: 12, color: '#0f0', marginBottom: 12, overflowX: 'auto', whiteSpace: 'nowrap' }}>
-          DEBUG: {debugInfo}
-        </div>
 
         {error && <ErrorBanner message={error} />}
 
