@@ -1,6 +1,33 @@
 import { useState, useEffect } from 'react';
-import { fetchTopTracks, fetchTrackDetails } from '../api/spotify';
+import { fetchTopTracks } from '../api/spotify';
 import type { SpotifyTrack, TimeRange } from '../types/spotify';
+
+const SPOTIFY_API = 'https://api.spotify.com/v1';
+
+async function enrichTracks(items: SpotifyTrack[]): Promise<SpotifyTrack[]> {
+  const token = localStorage.getItem('access_token');
+  if (!token || items.length === 0) return items;
+
+  const ids = items.map((t) => t.id).join(',');
+  const res = await fetch(`${SPOTIFY_API}/tracks?ids=${ids}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return items;
+
+  const data = await res.json();
+  const detailMap = new Map<string, any>(
+    (data.tracks ?? []).filter(Boolean).map((t: any) => [t.id, t])
+  );
+
+  return items.map((t) => {
+    const full = detailMap.get(t.id);
+    if (!full) return t;
+    return {
+      ...t,
+      popularity: full.popularity ?? t.popularity,
+    };
+  });
+}
 
 export function useTopTracks(timeRange: TimeRange) {
   const [tracks, setTracks] = useState<SpotifyTrack[]>([]);
@@ -13,25 +40,9 @@ export function useTopTracks(timeRange: TimeRange) {
     fetchTopTracks(timeRange)
       .then(async (data) => {
         let items = data.items;
-
-        // Spotify may return simplified tracks without popularity.
-        // Enrich by fetching full track objects by ID.
         if (items.length > 0 && items[0].popularity == null) {
-          try {
-            const ids = items.map((t) => t.id);
-            const details = await fetchTrackDetails(ids);
-            const detailMap = new Map(
-              details.tracks.map((t) => [t.id, t])
-            );
-            items = items.map((t) => {
-              const full = detailMap.get(t.id);
-              return full ? { ...t, popularity: full.popularity } : t;
-            });
-          } catch {
-            // Enrichment failed — continue with original data
-          }
+          items = await enrichTracks(items);
         }
-
         setTracks(items);
       })
       .catch((err) => setError(err.message))
